@@ -7,7 +7,7 @@
     "test": "npm test",
     "start": "node server.js"
   },
-  "author": "Moaaz Elsayed",
+  "author": "Rishi Kar",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
