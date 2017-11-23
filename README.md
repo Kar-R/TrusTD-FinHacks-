@@ -1,6 +1,8 @@
-# TrusTD-FinHacks - [Check out the website](http://trustd.herokuapp.com/)
+# TrusTD-FinHacks
 
 TrusTD is a service that tracks and resolves IOU promises through block-chain technology to help eliminate micro transactions. It incorporates IoT to suggest the right time and place to pay for any unresolved promises. It uses communication through natural language processing to interact with a Cisco Spark bot that tracks IOUs.
+
+## [Check out the website!](http://trustd.herokuapp.com/)
 
 ## How does it work?
 
