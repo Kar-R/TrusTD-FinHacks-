@@ -56,7 +56,8 @@ app.post('/', function(req, res) {
 		}
 	}
 	var sendMention = "https://api.ciscospark.com/v1/people/"+mentionedId2;
-
+	
+	//functions checks to see how much one person owes another 'how' and 'much' must be first 2 arguments
 	unirest.get(sendMessageID).headers(header)
 	.end(function(res){
 		if (res.body.text.indexOf('how') !== -1 || res.body.text.indexOf('much') !== -1){
@@ -75,7 +76,7 @@ app.post('/', function(req, res) {
 					.headers(header)
 					.send({
 						'roomId': res.body.roomId,
-						'text' : 'Let me check '+ name.split(' ')[0]
+						'text' : 'Let me check '+ name.split(' ')[0] //Parses name checks for money owed
 					})
 					.end(function(req, resp){
 							MyCalc(name, res.body.roomId, header, nameMention);
@@ -84,6 +85,7 @@ app.post('/', function(req, res) {
 				});
 			})
 		}
+		// if 'yes' is not by the person who is sent the IOU, then does not validate
 		if (res.body.text.indexOf('yes') !== -1 && mentionedId2 == null){
 
 			unirest.get(sendNameID).headers(header)
@@ -136,7 +138,7 @@ app.post('/', function(req, res) {
 						'text' : 'IOU did not go through!'
 					})
 					.end(function(req, resp){
-						//Reset iou perameters
+						//Reset iou parameters
 						var previousMessage="";
 						var previousName="";
 						var previousMention="";
@@ -158,6 +160,9 @@ app.post('/', function(req, res) {
 				}
 			})
 		}
+		//Checks to see how much you owe someone in total 
+		//'TrusTD' and 'how' must be first arg and second arg respectively with the mentioned name
+		// returns money value of objects stored
 		if (res.body.personEmail.indexOf("TrusTD") !== -1 || mentionedId2 == null){
 			return;
 		} 
@@ -218,6 +223,8 @@ app.listen(8080, function() {
 	console.log('listening on *: ' + 8080);
 });
 
+//function to calculate ledger 
+//Calculates amountOwed and returns a message with the value
 function MyCalc(name, room, header, mention) {
 	firebaseDataRef.ref().once('value')
 	.then(function(snapshot) {
@@ -292,7 +299,7 @@ function MyCalc(name, room, header, mention) {
   	});
 }
 
-
+// 
 function DataPush(taker, count, data) {
     firebaseDataRef.ref().child('IOUs').child(taker).push(data)
     .then((res) => {
@@ -309,12 +316,12 @@ function DataPush(taker, count, data) {
     });
 }
 
-
+//used to parse through messages in chatroom
 function APIQuery(message){
 	// intentName
 	// objects
 	// given-name
-	//var message = 'TrusTD calen owes me dinner';
+	// var message = 'TrusTD calen owes me dinner';
 	trimstr =message.substring(7, message.length)
 	console.log ("inAPIQ" + trimstr);
 	var queryURL = 'https://api.api.ai/api/query?v=20150910&query='+  trimstr+'&lang=en&sessionId=234948ff-72a1-460f-ad7f-049dd8a24415&timezone=2016-11-19T21:54:43-0500';
@@ -335,6 +342,7 @@ function APIQuery(message){
 		}) 
 };
 
+//money values of various objects
 function moneyvalue(objectname){
 val = 0	
 if (objectname.indexOf('money') !== -1){
